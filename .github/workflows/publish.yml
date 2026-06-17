@@ -26,5 +26,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # TOKEN BOOTSTRAP (one-time) — a Trusted Publisher can't be configured for a
+      # package that doesn't exist yet, so the first publish authenticates with a
+      # short-lived granular npm token from the NPM_TOKEN repo secret. After it
+      # publishes once: add the Trusted Publisher on npmjs.com, revoke the token,
+      # and drop the env block below so releases ship via OIDC.
       - name: Publish
         run: npx -y npm@latest publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
