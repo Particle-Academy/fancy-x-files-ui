@@ -1,6 +1,6 @@
 {
   "name": "@particle-academy/fancy-x-files-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Headless react-fancy editor suite for the well-known files modeled by fancy-x-files — robots.txt, security.txt, llms.txt, humans.txt, sitemap.xml, AGENTS — controlled, JSON-friendly, Human+ UX",
   "repository": {
     "type": "git",
