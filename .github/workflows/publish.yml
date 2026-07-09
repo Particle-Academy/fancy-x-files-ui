@@ -30,4 +30,4 @@ jobs:
       # configure the Trusted Publisher on npmjs.com + revoke that token so
       # releases ship via OIDC.
       - name: Publish
-        run: npx -y npm@latest publish --provenance --access public
+        run: npx -y npm@11.18.0 publish --provenance --access public
