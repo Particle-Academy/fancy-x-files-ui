@@ -1,5 +1,7 @@
 # @particle-academy/fancy-x-files-ui
 
+[![Fancified](art/fancified.svg)](https://particle.academy)
+
 A headless [react-fancy](https://github.com/Particle-Academy/react-fancy) editor
 suite for the **well-known files** modeled by
 [`fancy-x-files`](https://github.com/Particle-Academy/fancy-x-files) —
