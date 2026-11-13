@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Field, Input } from "@particle-academy/react-fancy";
 import type { SecurityTxtModel } from "../model.js";
 import { validateSecurityTxt } from "../validate.js";
@@ -21,6 +22,7 @@ export function SecurityTxtEditor({
   hideIssues,
   className,
 }: SecurityTxtEditorProps) {
+  const expiresId = useId();
   const issues = validateSecurityTxt(value);
   const patch = (next: Partial<SecurityTxtModel>) =>
     onChange({ ...value, ...next });
@@ -41,8 +43,11 @@ export function SecurityTxtEditor({
       </Section>
 
       <Section title="Expires (required, future)" handle="security-expires">
-        <Field description="Must be a date/time in the future.">
+        {/* Labelled through Field + htmlFor. The input had no name at all
+            (axe `label`, critical); the section heading is only a heading. */}
+        <Field label="Expires" htmlFor={expiresId} required description="Must be a date/time in the future.">
           <input
+            id={expiresId}
             type="datetime-local"
             value={expiresLocal}
             onChange={(e) =>

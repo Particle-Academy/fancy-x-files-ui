@@ -15,6 +15,14 @@ upgrading.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`SecurityTxtEditor`'s Expires field has a label** (axe `label`, critical,
+  lab run 601, K31). The datetime input sat in a `Field` with no label, so it
+  had no accessible name. The `Field` now carries "Expires" (marked required)
+  tied to the input by id. `[data-x-input="security-expires"]` is unchanged.
+  Nothing to do on upgrade.
+
 ### Changed
 
 - **Releases need a lab-run certificate.** `publish.yml` gains a read-only
