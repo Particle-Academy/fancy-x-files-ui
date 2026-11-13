@@ -22,6 +22,14 @@ upgrading.
   had no accessible name. The `Field` now carries "Expires" (marked required)
   tied to the input by id. `[data-x-input="security-expires"]` is unchanged.
   Nothing to do on upgrade.
+- **`SecurityTxtEditor`'s Expires field shows keyboard focus on every Tab
+  stop** (fancy-labs run 651, test-81). Its last stop is the datetime input's
+  calendar button, inside the browser's shadow root, where the input matches
+  `:focus-within` but not `:focus-visible`, so the browser outline went away
+  and nothing showed focus. The editor now renders a small `<style>` with a
+  2px `:focus-within` outline in the `--fancy-focus` / `--fancy-focus-dark`
+  tokens (the input is styled inline, which cannot express it). Nothing to do
+  on upgrade.
 
 ### Changed
 

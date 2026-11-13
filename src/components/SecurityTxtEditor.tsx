@@ -4,6 +4,18 @@ import type { SecurityTxtModel } from "../model.js";
 import { validateSecurityTxt } from "../validate.js";
 import { IssueList, Section, StringList } from "./internal.js";
 
+/**
+ * The Expires input's focus ring. A Tab walk ends on the datetime input's
+ * calendar button, inside the browser's shadow root, where the input matches
+ * `:focus-within` but not `:focus-visible`, so the browser's own outline goes
+ * away (lab run 651; react-fancy's DatePicker K7). The input is styled inline,
+ * which cannot express `:focus-within`, and hosts do not scan this package for
+ * Tailwind classes, so the rule ships here, in the kit's focus token.
+ */
+const EXPIRES_FOCUS_CSS =
+  '[data-x-input="security-expires"]:focus-within{outline:2px solid var(--fancy-focus,var(--color-blue-500,#3b82f6));outline-offset:2px}' +
+  ':where(.dark,[data-theme="dark"]) [data-x-input="security-expires"]:focus-within{outline-color:var(--fancy-focus-dark,var(--color-blue-400,#60a5fa))}';
+
 export interface SecurityTxtEditorProps {
   value: SecurityTxtModel;
   onChange: (next: SecurityTxtModel) => void;
@@ -45,6 +57,7 @@ export function SecurityTxtEditor({
       <Section title="Expires (required, future)" handle="security-expires">
         {/* Labelled through Field + htmlFor. The input had no name at all
             (axe `label`, critical); the section heading is only a heading. */}
+        <style>{EXPIRES_FOCUS_CSS}</style>
         <Field label="Expires" htmlFor={expiresId} required description="Must be a date/time in the future.">
           <input
             id={expiresId}

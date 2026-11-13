@@ -42,4 +42,43 @@ describe("SecurityTxtEditor", () => {
 
         act(() => root.unmount());
     });
+
+    it("shows focus on the Expires field while one of its inner controls has it", () => {
+        // Lab run 651 (test-81): a Tab walk reaches the datetime input's
+        // month / day / year / time segments and then its calendar button,
+        // all inside the browser's shadow root. On that last stop the input
+        // matches `:focus-within` but NOT `:focus-visible`, so the browser
+        // outline went away and nothing showed focus (react-fancy's DatePicker
+        // hit the same thing, K7). The input is styled inline, which cannot
+        // say `:focus-within`, so the editor ships the rule in a <style>.
+        const host = document.createElement("div");
+        document.body.append(host);
+        const root = createRoot(host);
+        act(() => root.render(<SecurityTxtEditor value={model} onChange={vi.fn()} />));
+
+        const input = host.querySelector<HTMLInputElement>('[data-x-input="security-expires"]')!;
+        const rules = [...host.querySelectorAll("style")].flatMap((s) => [...(s.sheet?.cssRules ?? [])]).filter(
+            (r): r is CSSStyleRule => r instanceof CSSStyleRule && r.selectorText.includes(":focus-within"),
+        );
+        // The rules that reach THIS input once `:focus-within` matches. (jsdom's
+        // selector engine matches `:where(.dark, …) x` with no dark ancestor, so
+        // the dark rule is told apart by its selector, not by toggling `.dark`.)
+        document.documentElement.classList.add("dark");
+        const applying = rules.filter((r) => input.matches(r.selectorText.replace(/:focus-within/g, "")));
+        document.documentElement.classList.remove("dark");
+        const light = applying.filter((r) => !/\.dark/.test(r.selectorText));
+        const dark = applying.filter((r) => /\.dark/.test(r.selectorText));
+        expect(light.length, "a :focus-within rule reaches the Expires input").toBe(1);
+        // jsdom keeps the `outline` shorthand as written (no longhands).
+        const outline = light[0].style.getPropertyValue("outline");
+        expect(outline).toMatch(/^2px solid /);
+        expect(outline).toContain("--fancy-focus");
+        expect(dark.length, "a dark-host rule reaches the Expires input").toBe(1);
+        expect(dark[0].style.outlineColor).toContain("--fancy-focus-dark");
+        // Nothing inline may switch the outline off: an inline declaration would win.
+        expect(input.style.outline).toBe("");
+        expect(input.style.outlineStyle).toBe("");
+
+        act(() => root.unmount());
+    });
 });
